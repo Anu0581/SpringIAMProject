@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Simple Spring Boot Web App</title>
+	<style>
+		table,
+		td {
+			border: 1px solid black;
+		}
+	</style>
+	<style>
+		.center {
+			margin: 0;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			-ms-transform: translate(-50%, -50%);
+			transform: translate(-50%, -50%);
+		}
+	</style>
+
+</head>
+
+<body>
+	<h1 id="welcome" style="display: none;">Welcome to the Grocerry Store!</h1>
+	<h1 id="accessMessage" >Please click on Login Button to access!</h1>
+	<div class="center">
+		<button onclick="location.href='./login'" id="login">Login</button>
+	</div>
+
+	<h3 id="user"></h3>
+	<table id="table" style="display: none;">
+		<tr>
+			<td style="padding:70px">
+				<div id="id01"></div>
+			</td>
+			<td style="padding:70px">
+				<div id="id02"></div>
+			</td>
+			<td style="padding:70px">
+				<div id="id03"></div>
+			</td>
+		</tr>
+	</table>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+	    
+		$().ready(function () {
+			$.get("./api/user")
+				.then(function (resp) {
+					$("#user").text("Hello " + resp.name);
+					$("#logout").show();
+					$("#login").hide();
+					$("#itemForm").show();
+					$("#table").show();
+					$("#welcome").show();
+					$("#accessMessage").hide();
+					$().ready(function () {
+						$.get("./userInfo")
+		});
+					
+				});
+		});
+		$().ready(function () {
+			$.get("./api/product")
+				.then(function (resp) {
+					var i = 0;
+					var tab = [];
+					for (let r of resp) {
+
+						tab[i] = `<table> <thead>
+								 </thead>
+								<tbody>
+									<tr><td>Product Name: ${r.product} </td></tr> 					
+								    <tr><td>Product Price: ${r.productPrice} </td></tr>
+								    <tr><td>Product Quantity: ${r.quantity}</td></tr></tbody>
+								</table>`;
+						i = i + 1;
+
+					}
+					document.getElementById("id01").innerHTML = tab[0];
+					document.getElementById("id02").innerHTML = tab[1];
+					document.getElementById("id03").innerHTML = tab[2];
+				});
+		});
+	</script>
+	<form id="itemForm" style="display: none;" object="orderEntiry" method="POST" action="/postOrder" >
+		<label for="Item">Item:</label>
+		<select id="productName" name="productName">
+			<option value="Apple">Apple</option>
+			<option value="Onion">Onion</option>
+			<option value="Tomato">Tomato</option>
+		</select>
+		<br>
+		<br>
+		<label for="Quantity">Quantity:</label>
+		<input type="text" id="quantity" name="quantity"><br>
+		<br>
+		<input type="submit"></input>
+	</form>
+	<h3></h3>
+	<button onclick="location.href='./logout'" id="logout" style="display: none;">Logout</button>
+</body>
+
+</html>
